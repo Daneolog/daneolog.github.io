@@ -1,0 +1,15 @@
+body {
+  font-family: Garamond, sans-serif;
+  color: #5f5f5f;
+
+  width: 50%;
+  margin: auto;
+  padding-top: 50px;
+}
+
+h1 {
+}
+
+h2 {
+  border-bottom: 1px solid black;
+}
