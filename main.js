@@ -8,14 +8,11 @@ var height;
 
 var params = [];
 
-var loggedIn = false;
-var username = '';
-
 window.onload = function() {
   tabs = document.getElementsByClassName('tab-content');
   tabButtons = document.getElementsByClassName('tab-button');
 
-  $.getJSON('database.json', function(results) {
+  $.getJSON('database.php', function(results) {
     data = results;
     // had to add this in to process dates from MySQL
     data.forEach(d => (d.Date = new Date(d.Date)));
@@ -24,20 +21,6 @@ window.onload = function() {
     // just for testing (switch this back to raw if not set)
     viewTab('raw');
   });
-
-  $.post(
-    'checkLogin.php',
-    data => {
-      console.log(data);
-      if (data.result == 'success') {
-        loggedIn = true;
-        username = data.name;
-      }
-
-      refreshStatus();
-    },
-    'json'
-  );
 };
 
 function viewTab(tabName) {
@@ -66,8 +49,6 @@ function viewTab(tabName) {
 
 function loadRaw() {
   var table = document.getElementById('rawTable');
-
-  console.log(data);
 
   // add in headers
   var tr = '<tr>';
@@ -152,52 +133,4 @@ function setParam(index, value) {
     params = params[index];
     box.buildBox(params);
   }
-}
-
-function refreshStatus() {
-  var loginBtn = document.getElementById('loginBtn');
-  var userOptions = document.getElementById('userOptions');
-  var greeting = document.getElementById('greeting');
-
-  if (loggedIn) {
-    loginBtn.style.display = 'none';
-    userOptions.style.display = 'inline-block';
-    greeting.textContent = `Welcome, ${username}`;
-  } else {
-    loginBtn.style.display = 'inline';
-    userOptions.style.display = 'none';
-  }
-}
-
-function login() {
-  username = document.getElementById('l_username');
-  password = document.getElementById('l_password');
-
-  $.post(
-    'login.php',
-    {
-      username: username.value,
-      password: password.value
-    },
-    data => {
-      console.log(data);
-      if (data.result == 'success') {
-        loggedIn = true;
-        username = data.name;
-      }
-
-      refreshStatus();
-      viewTab('raw');
-    },
-    'json'
-  );
-}
-
-function logout() {
-  $.post('logout.php', done => {
-    loggedIn = false;
-    username = '';
-
-    refreshStatus();
-  });
 }

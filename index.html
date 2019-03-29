@@ -19,13 +19,13 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
     <!-- local version (use if you don't have access to internet...?) -->
-    <!-- <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/d3.min.js"></script> -->
+    <!-- <script src="jquery-3.3.1.min.js"></script>
+    <script src="d3.min.js"></script> -->
 
-    <script src="js/main.js"></script>
-    <script src="js/scatter.js"></script>
-    <script src="js/time.js"></script>
-    <script src="js/box.js"></script>
+    <script src="main.js"></script>
+    <script src="scatter.js"></script>
+    <script src="time.js"></script>
+    <script src="box.js"></script>
   </head>
   <body>
     <div class="tab-bar">
@@ -90,20 +90,7 @@
 
       <div id="login" class="tab-content">
         <div class="card">
-          <h1>Login</h1>
-          <input
-            id="l_username"
-            type="text"
-            style="width: 100%"
-            placeholder="Username"
-          />
-          <input
-            id="l_password"
-            type="password"
-            style="width: 100%"
-            placeholder="Password"
-          />
-          <button onclick="login()">Login</button>
+          login here :D
         </div>
       </div>
 
@@ -113,13 +100,9 @@
     </div>
 
     <div class="tab-bar">
-      <button id="loginBtn" class="tab-button" onclick="viewTab('login')">
+      <button class="tab-button" onclick="viewTab('login')">
         Login
       </button>
-      <div id="userOptions" style="display: inline-block">
-        <span id="greeting">Welcome,</span>
-        <button onclick="logout()">Logout</button>
-      </div>
       <button class="tab-button right" onclick="viewTab('raw')">
         View Data
       </button>
