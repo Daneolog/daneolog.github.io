@@ -1,39 +1,128 @@
-<head>
-  <link rel="stylesheet" type="text/css" href="style.css">
-</head>
+<!-- README first
+  If you need to run the program, use the stuff in brackets (don't include brackets): [php -S localhost:8000]
+  (before it was with Python's webserver, but now I have to use PHP's webserver to support PHP code)
+  (then open it in localhost:8000)
 
-<body>
-  <h1>Active Sports Technology, Inc.</h1>
-  <img src="banner.png">
-  <h2>Overview</h2>
-  <h3>The challenge</h3>
+  Dependencies needed:
+  MySQL Workbench/Server (workbench comes with server)
+  this is not related to the prototype currently, it's just where the database is stored
+-->
 
-  <p>It's impossible to not get caught up in the excitement of Atlanta's sports scene. With six professional sports
-    franchises, high-performing collegiate teams, and top-notch venues – we strive to build technology sports
-    solutions.</p>
-  Our goal is to address the following areas:
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>StreamViz</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
 
-  <ul>
-    <li>Athletic performance - wearables, data collection, performance analytics, optimization, injury prevention,
-      apparel, equipment, talent evaluation</li>
-    <li>Fan engagement - in-game engagement, deepen relationships/segmentation, communications, sales</li>
-    <li>Operations - ticketing, game-day operations, parking, security, concessions, managing crowds entering and
-      leaving
-      the stadium, venue management</li>
-    <li>Awards Program - loyalty and rewards program for attending and supporting sport events.</li>
-    <li>Recruiting - a platform to find and evaluate sports talent to help recruit the best and brightest athletes.</li>
-  </ul>
+    <!-- remote version: -->
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 
-  <h3>The solution</h3>
+    <!-- local version (use if you don't have access to internet...?) -->
+    <!-- <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/d3.min.js"></script> -->
 
-  <p>Comprehensive SaaS (Software as a Service) solution to improve the fan experience with a new state-of-the-art
-    stadium.</p>
+    <script src="js/main.js"></script>
+    <script src="js/scatter.js"></script>
+    <script src="js/time.js"></script>
+    <script src="js/box.js"></script>
+  </head>
+  <body>
+    <div class="tab-bar">
+      <button class="tab-button top" onclick="viewTab('box')">Box Plot</button
+      ><button class="tab-button top" onclick="viewTab('scatter')">
+        Scatter Plot</button
+      ><button class="tab-button top" onclick="viewTab('time')">
+        Time Series
+      </button>
+    </div>
 
-  <p>For example, the entry experience. We will provide a device that could improve the speed and quality of stadium
-    ingress, allowing greeters to shift their focus from scanning tickets to welcoming fans, as well as capture data to
-    inform future developments, like a fan loyalty program.
-    To address this need, we will develop a self-service ticket reading device that is flexible, mobile, wireless, and
-    battery operated, as well as a robust backend web and database infrastructure with the ability to communicate in
-    real
-    time with existing ticketing services, such as Ticketmaster.</p>
-</body>
+    <div class="main">
+      <div id="box" class="tab-content">
+        <div class="sidebar">
+          <h2>choices</h2>
+          <p>
+            Variable:<br />
+            <!-- first get selected options from select, but it's in the form of an HTMLCollection, so 
+              convert it to an array. then map each element from an HTMLOption to its label.-->
+            <select
+              multiple
+              id="bvar"
+              onchange="setParam(0, Array.from(this.selectedOptions).map(d => d.label))"
+              size="12"
+            ></select>
+          </p>
+        </div>
+        <div class="content">
+          <svg id="boxsvg" width="1195.5px" height="100%"></svg>
+        </div>
+      </div>
+
+      <div id="scatter" class="tab-content">
+        <div class="sidebar">
+          <h2>choices</h2>
+          <p>
+            Variable 1:<br />
+            <select id="svar1" onchange="setParam(0, this.value)"></select>
+          </p>
+          <p>
+            Variable 2:<br />
+            <select id="svar2" onchange="setParam(1, this.value)"></select>
+          </p>
+        </div>
+        <div class="content">
+          <svg id="scattersvg" width="1195.5px" height="100%"></svg>
+        </div>
+      </div>
+
+      <div id="time" class="tab-content">
+        <div class="sidebar">
+          <h2>choices</h2>
+          <p>
+            Variable:<br />
+            <select id="tvar" onchange="setParam(0, this.value)"></select>
+          </p>
+        </div>
+        <div class="content">
+          <svg id="timesvg" width="1195.5px" height="100%"></svg>
+        </div>
+      </div>
+
+      <div id="login" class="tab-content">
+        <div class="card">
+          <h1>Login</h1>
+          <input
+            id="l_username"
+            type="text"
+            style="width: 100%"
+            placeholder="Username"
+          />
+          <input
+            id="l_password"
+            type="password"
+            style="width: 100%"
+            placeholder="Password"
+          />
+          <button onclick="login()">Login</button>
+        </div>
+      </div>
+
+      <div id="raw" class="tab-content">
+        <table id="rawTable"></table>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button id="loginBtn" class="tab-button" onclick="viewTab('login')">
+        Login
+      </button>
+      <div id="userOptions" style="display: inline-block">
+        <span id="greeting">Welcome,</span>
+        <button onclick="logout()">Logout</button>
+      </div>
+      <button class="tab-button right" onclick="viewTab('raw')">
+        View Data
+      </button>
+    </div>
+  </body>
+</html>
